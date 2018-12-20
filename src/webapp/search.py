@@ -1,4 +1,5 @@
 from flask import Blueprint, g, render_template, request, url_for
+from .index import test_results
 
 bp = Blueprint('search', __name__)
 
@@ -10,6 +11,6 @@ def index():
 def search():
     # return request.args.get('s')
 
-    results = ["test1", "test2", "test3"]
+    link_results = test_results()
 
-    return render_template('index.html', results=results)
+    return render_template('index.html', results=link_results)

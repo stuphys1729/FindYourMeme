@@ -19,7 +19,8 @@
         {% if results %}
             {% for result in results %}
                 <div>
-                    <p>{{ result }}</p>
+                    <img src="{{ result[0] }}" alt="Image" style="width: 500px;">
+                    <p>{{ result[1] }}</p>
                 </div>
             {% endfor %}
         {% endif %}
