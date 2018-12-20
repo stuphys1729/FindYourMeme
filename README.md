@@ -15,4 +15,4 @@ $ ./run-app.sh
 > * Debugger PIN: 211-961-312
 ```
 
-Then visit `localhost:5000/` / `127.0.0.1:5000/` to see the webapp in action.
+Then visit [`localhost:5000/`](http://localhost:5000/) to see the webapp in action.
