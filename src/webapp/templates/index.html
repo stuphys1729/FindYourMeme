@@ -16,6 +16,10 @@
         </form>
     </div>
     <div id="search-results">
+        {% if search_term %}
+            <p>Search term: {{ search_term }}</p>
+        {% endif %}
+
         {% if results %}
             {% for result in results %}
                 <div>
