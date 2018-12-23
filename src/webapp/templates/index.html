@@ -10,10 +10,17 @@
 </head>
 <body>
     <div id="search-box">
-        <form action="/search" method="get">
-            <input type="text" name="s" id="search-box">
-            <input type="submit" value="Search">
-        </form>
+        {% if search_term %}
+            <form action="/search" method="get">
+                <input type="text" name="s" id="search-box" value="{{ search_term }}">
+                <input type="submit" value="Search">
+            </form>
+        {% else %}
+            <form action="/search" method="get">
+                <input type="text" name="s" id="search-box">
+                <input type="submit" value="Search">
+            </form>
+        {% endif %}
     </div>
     <div id="search-results">
         {% if search_term %}

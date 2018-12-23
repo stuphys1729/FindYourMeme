@@ -1,14 +1,15 @@
 from flask import Flask, url_for, request, render_template
+from .index import test_results
 
-from . import search
+app = Flask(__name__)
 
-def create_app():
-    app = Flask(__name__)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-    @app.route('/test')
-    def hello():
-        return "Hello, world!"
+@app.route('/search', methods=('GET',))
+def search():
+    link_results = test_results()
+    search_term = request.args.get('s')
 
-    app.register_blueprint(search.bp)
-
-    return app
+    return render_template('index.html', results=link_results, search_term=search_term)
