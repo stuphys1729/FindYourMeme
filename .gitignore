@@ -102,3 +102,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Custom patterns
+dankKnowledge/trainingImages/*
+KerasExample/test_set/*
+KerasExample/training_set/*
