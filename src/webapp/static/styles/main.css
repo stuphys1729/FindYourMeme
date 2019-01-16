@@ -1,0 +1,50 @@
+* {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    padding: 20px;
+    margin: 0 auto;
+    background-color: black;
+}
+
+header form {
+    word-spacing: 0;
+}
+
+header input {
+    padding: 10px;
+    display: inline-block;
+    border: none;
+}
+
+header input[type=text] {
+    color: #333;
+    border: none;
+    background-color: white;
+    width: 500px;
+}
+
+header input[type=submit] {
+    margin-left: 0 !important;
+    background-color: grey;
+    color: #333;
+}
+
+#main {
+    height: 100%;
+    width: 100%;
+}
+
+.center {
+    margin: auto;
+    width: 70%;
+    padding: 10px;
+  }
