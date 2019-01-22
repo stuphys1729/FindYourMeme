@@ -9,17 +9,24 @@
     <!-- <script src="main.js"></script> -->
 </head>
 <body>
-    <header class="full-height">
-        <div class="center center-text vertical-center">
-            {% if search_term %}
-                <img src="{{ url_for('static',filename='img/logo-black-xsmall.png') }}" alt="FindYourMeme">
+    {% if search_term %}
+        <header>
+            <div class="center center-text" id="small-header">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static',filename='img/logo-black-xsmall.png') }}" alt="FindYourMeme">
+                </a>
                 <div id="search-box" class="center center-text">
                     <form action="/search" method="get">
                         <input type="text" name="s" id="search-box" value="{{ search_term }}">
                         <input type="submit" value="Search">
                     </form>
-            {% else %}
-                <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt="">
+    {% else %}
+        <header class="full-height">
+            <div class="center center-text vertical-center">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt="FindYourMeme">
+                </a>
+                <!-- <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt=""> -->
                 <div id="search-box" class="center center-text">
                     <form action="/search" method="get">
                         <input type="text" name="s" id="search-box">
@@ -36,12 +43,35 @@
                     <p>Search term: {{ search_term }}</p>
                 {% endif %}
 
-                {% if results %}
+                {% if results and search_term %}
                     {% for result in results %}
-                        <div>
-                            <img src="{{ result[0] }}" alt="Image" style="width: 500px;">
-                            <p>{{ result[1] }}</p>
-                        </div>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                        <a href="#">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
                     {% endfor %}
                 {% endif %}
             </div>
