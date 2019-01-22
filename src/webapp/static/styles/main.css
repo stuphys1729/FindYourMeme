@@ -95,3 +95,7 @@ header input[type=submit] {
     float: left;
     border: black dotted 1px;
 }
+
+#meme-focus {
+    display: inline-block;
+}

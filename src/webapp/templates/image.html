@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if result %}
+        <!-- {{ result }} -->
+        <div id="meme-focus">
+            <img src="{{result[0]}}" alt="{{result[1]}}">
+            <div id="meme-focus-results">
+                {{ result[1] }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

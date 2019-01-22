@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}Find Your Meme{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static',filename='styles/main.css') }}" />
-    <!-- <script src="main.js"></script> -->
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
     {% if search_term %}
         <header>
             <div class="center center-text" id="small-header">
@@ -39,37 +31,9 @@
     <div id="main">
         <div>
             <div id="search-results">
-                <!-- {% if search_term %}
-                    <p>Search term: {{ search_term }}</p>
-                {% endif %} -->
-
                 {% if results and search_term %}
                     {% for result in results %}
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
-                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
-                        </a>
-                        <a href="#">
+                        <a href="{{ url_for('meme', meme_id=result[2]) }}" target="_blank">
                             <img src="{{ result[0] }}" alt="Image" class="meme-result">
                         </a>
                     {% endfor %}
@@ -77,5 +41,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
