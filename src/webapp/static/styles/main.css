@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     background-color: transparent;
+    box-sizing: border-box;
 }
 
 html body {
@@ -72,23 +73,27 @@ header input[type=submit] {
 }
 
 #search-results {
-    display: inline-block;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    width: 90%;
+    margin: auto;
 }
 
 .meme-result {
-    /* height: 300px;
-    width: 300px; */
     object-fit: cover;
-    padding: 0px;
-    height: 298px;
-    width: 19%;
+    padding: 5px;
+    height: 200px;
+    /* width: 300px; */
+    flex-basis: auto;
     float: left;
     border: white solid 1px;
 }
 
-.meme-result:hover {
-    height: 298px;
-    width: 19%;
+/* .meme-result:hover {
+    height: 300px;
+    width: 300px;
     float: left;
     border: black dotted 1px;
-}
+} */
