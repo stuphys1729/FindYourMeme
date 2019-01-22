@@ -85,15 +85,13 @@ header input[type=submit] {
     object-fit: cover;
     padding: 5px;
     height: 200px;
-    /* width: 300px; */
     flex-basis: auto;
     float: left;
     border: white solid 1px;
 }
 
-/* .meme-result:hover {
-    height: 300px;
-    width: 300px;
+.meme-result:hover {
+    flex-basis: auto;
     float: left;
     border: black dotted 1px;
-} */
+}
