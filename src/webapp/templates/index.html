@@ -9,21 +9,25 @@
     <!-- <script src="main.js"></script> -->
 </head>
 <body>
-    <header>
-        {% if search_term %}
-            <div id="search-box" class="center">
-                <form action="/search" method="get">
-                    <input type="text" name="s" id="search-box" value="{{ search_term }}">
-                    <input type="submit" value="Search">
-                </form>
-        {% else %}
-            <div id="search-box" class="center">
-                <form action="/search" method="get">
-                    <input type="text" name="s" id="search-box">
-                    <input type="submit" value="Search">
-                </form>
-            </div>
-        {% endif %}
+    <header class="full-height">
+        <div class="center center-text vertical-center">
+            {% if search_term %}
+                <img src="{{ url_for('static',filename='img/logo-black-xsmall.png') }}" alt="FindYourMeme">
+                <div id="search-box" class="center center-text">
+                    <form action="/search" method="get">
+                        <input type="text" name="s" id="search-box" value="{{ search_term }}">
+                        <input type="submit" value="Search">
+                    </form>
+            {% else %}
+                <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt="">
+                <div id="search-box" class="center center-text">
+                    <form action="/search" method="get">
+                        <input type="text" name="s" id="search-box">
+                        <input type="submit" value="Search">
+                    </form>
+                </div>
+            {% endif %}
+        </div>
     </header>
     <div id="main">
         <div>
