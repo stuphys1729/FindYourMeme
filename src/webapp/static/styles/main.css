@@ -97,5 +97,29 @@ header input[type=submit] {
 }
 
 #meme-focus {
-    display: inline-block;
+    display: flex;
+    justify-content: left;
+    margin: 20px;
+}
+
+#meme-focus img {
+    height: 400px;
+    padding: 10px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+td:nth-child(1) {
+    font-weight: 700;
+    border-right: black solid 2px;
 }
