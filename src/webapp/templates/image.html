@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+<!-- IDEA: Replace this with direct link to reddit page? -->
+
+{% block content %}
+    {% if result %}
+        <!-- {{ result }} -->
+        <div id="meme-focus">
+            <img src="{{result[0]}}" alt="{{result[1]}}">
+            <div id="meme-focus-results">
+                <table>
+                    <!-- <tr>
+                        <th>Metadata</th>
+                        <th></th>
+                    </tr> -->
+                    <tr>
+                        <td>URL</td>
+                        <td>{{ result[0] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Caption</td>
+                        <td>{{ result[1] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Value 1</td>
+                    </tr>
+                    <tr>
+                        <td>Data 2</td>
+                        <td>Value 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Value 3</td>
+                    </tr>
+                    <tr>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

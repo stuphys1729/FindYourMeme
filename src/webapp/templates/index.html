@@ -1,40 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}Find Your Meme{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
-    <!-- <script src="main.js"></script> -->
-</head>
-<body>
-    <div id="search-box">
-        {% if search_term %}
-            <form action="/search" method="get">
-                <input type="text" name="s" id="search-box" value="{{ search_term }}">
-                <input type="submit" value="Search">
-            </form>
-        {% else %}
-            <form action="/search" method="get">
-                <input type="text" name="s" id="search-box">
-                <input type="submit" value="Search">
-            </form>
-        {% endif %}
-    </div>
-    <div id="search-results">
-        {% if search_term %}
-            <p>Search term: {{ search_term }}</p>
-        {% endif %}
+{% extends 'base.html' %}
 
-        {% if results %}
-            {% for result in results %}
-                <div>
-                    <img src="{{ result[0] }}" alt="Image" style="width: 500px;">
-                    <p>{{ result[1] }}</p>
+{% block content %}
+    {% if search_term %}
+        <header>
+            <div class="center center-text" id="small-header">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static',filename='img/logo-black-xsmall.png') }}" alt="FindYourMeme">
+                </a>
+                <div id="search-box" class="center center-text">
+                    <form action="/search" method="get">
+                        <input type="text" name="s" id="search-box" value="{{ search_term }}">
+                        <input type="submit" value="Search">
+                    </form>
+    {% else %}
+        <header class="full-height">
+            <div class="center center-text vertical-center">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt="FindYourMeme">
+                </a>
+                <!-- <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt=""> -->
+                <div id="search-box" class="center center-text">
+                    <form action="/search" method="get">
+                        <input type="text" name="s" id="search-box">
+                        <input type="submit" value="Search">
+                    </form>
                 </div>
-            {% endfor %}
-        {% endif %}
+            {% endif %}
+        </div>
+    </header>
+    <div id="main">
+        <div>
+            <div id="search-results">
+                {% if results and search_term %}
+                    {% for result in results %}
+                        <a href="{{ url_for('meme', meme_id=result[2]) }}" target="_blank">
+                            <img src="{{ result[0] }}" alt="Image" class="meme-result">
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
     </div>
-</body>
-</html>
+{% endblock %}
