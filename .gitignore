@@ -103,6 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# VS Code files
+.vscode
+
 # Custom patterns
 dankKnowledge/trainingImages/*
 KerasExample/test_set/*
