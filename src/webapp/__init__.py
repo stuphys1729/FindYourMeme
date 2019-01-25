@@ -1,5 +1,5 @@
 from flask import Flask, url_for, request, render_template
-from .index import test_results
+from .index import test_results, solr_search
 
 app = Flask(__name__)
 
@@ -9,8 +9,8 @@ def index():
 
 @app.route('/search', methods=('GET',))
 def search():
-    link_results = test_results()
     search_term = request.args.get('s')
+    link_results = solr_search(search_term)
 
     return render_template('index.html', results=link_results, search_term=search_term)
 

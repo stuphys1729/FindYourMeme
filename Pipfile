@@ -18,6 +18,7 @@ sklearn = "*"
 pytesseract = "*"
 tensorflow = "*"
 opencv-python = "*"
+pysolr = "*"
 
 [dev-packages]
 pylint = "*"
