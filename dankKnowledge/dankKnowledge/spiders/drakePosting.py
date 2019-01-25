@@ -18,7 +18,6 @@ class DankwiseSpider(scrapy.Spider):
         if next_page:
             yield response.follow(next_page, self.parse)
 
-
     def parseImLink(self, response):
 
             imLink = response.xpath('//div[@id="photo_wrapper"]').xpath('a/@href').extract_first()

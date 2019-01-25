@@ -14,6 +14,9 @@ class ScumbagSteveSpider(scrapy.Spider):
             imLink = item.xpath('a/@href').extract_first()
             yield response.follow(imLink, self.parseImLink)
 
+        next_page = response.css('.next_page').xpath('@href').extract_first()
+        if next_page:
+            yield response.follow(next_page, self.parse)
 
     def parseImLink(self, response):
 
