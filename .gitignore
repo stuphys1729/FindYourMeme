@@ -107,6 +107,11 @@ venv.bak/
 .vscode
 
 # Custom patterns
-dankKnowledge/trainingImages/*
-KerasExample/test_set/*
-KerasExample/training_set/*
+*.jpg
+*.png
+*.gif
+Lab*/
+KerasExample/
+*.dat
+*.h5
+*.zip
