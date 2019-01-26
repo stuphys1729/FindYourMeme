@@ -1,4 +1,5 @@
 import pysolr
+import json
 
 solr = pysolr.Solr("http://localhost:8983/solr/test_core", timeout=10)
 
@@ -20,14 +21,17 @@ solr = pysolr.Solr("http://localhost:8983/solr/test_core", timeout=10)
 #         ]
 #     },
 # ],  commit=True)
-solr.add([
-    {
-        "id": "1",
-        "title": "Haha a funny meme",
-        "url": "https://i.redd.it/eg49qet98e521.jpg",
-        "image_text": "evolution dude fuck off"
-    }
-],  commit=True)
+with open("memes.dat", 'r') as f:
+    memeData = json.loads(f.read())
+
+data = [ {
+    "id": id,
+    "title": memeData[id]['title'],
+    "url": memeData[id]['url'],
+    "image_text": memeData[id]['imText']
+} for id in memeData]
+
+solr.add(data, commit=True)
 
 results = solr.search('title:funny')
 print("Saw {0} result(s).".format(len(results)))

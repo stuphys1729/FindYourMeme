@@ -6,6 +6,12 @@ name = "pypi"
 [packages]
 flask = "*"
 pysolr = "*"
+praw = "*"
+matplotlib = "*"
+ipywidgets = "*"
+pytesseract = "*"
+requests = "*"
+numpy = "*"
 
 [dev-packages]
 pylint = "*"
