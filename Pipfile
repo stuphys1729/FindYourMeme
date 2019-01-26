@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
+pysolr = "*"
 
 [dev-packages]
 pylint = "*"
