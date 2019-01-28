@@ -1,5 +1,12 @@
 import pysolr
 import json
+from .scraping import update_meme_data
+
+def test_results():
+    return memeData
+
+def solr_search(query):
+    return solr.search('title:' + query).docs
 
 solr = pysolr.Solr("http://localhost:8983/solr/test_core", timeout=10)
 
@@ -15,8 +22,14 @@ data = [ {
 
 solr.add(data, commit=True)
 
-def test_results():
-    return memeData
+newData = update_meme_data(memeData)
 
-def solr_search(query):
-    return solr.search('title:' + query).docs
+
+data = [ {
+    "id": id,
+    "title": memeData[id]['title'],
+    "url": memeData[id]['url'],
+    "image_text": memeData[id]['imText']
+} for id in newData]
+
+solr.add(data, commit=True)
