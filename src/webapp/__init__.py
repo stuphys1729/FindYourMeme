@@ -1,7 +1,12 @@
 from flask import Flask, url_for, request, render_template
-from .index import test_results, solr_search
+from .index import test_results, solr_search, setup_collection
+import threading
+
 
 app = Flask(__name__)
+
+threading.Thread(target=setup_collection).start()
+
 
 @app.route('/')
 def index():
