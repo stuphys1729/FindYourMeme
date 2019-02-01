@@ -12,6 +12,7 @@ ipywidgets = "*"
 pytesseract = "*"
 requests = "*"
 numpy = "*"
+keras = "*"
 
 [dev-packages]
 pylint = "*"
