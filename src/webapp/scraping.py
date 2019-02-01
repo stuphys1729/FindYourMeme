@@ -55,7 +55,7 @@ def update_meme_data(memeData):
         print("Processed {} memes in {}".format(updated, taken))
 
         data = json.dumps(memeData)
-        with open("memes.dat", 'w') as f:
+        with open("memes.json", 'w') as f:
             f.write(data)
 
     return newData
