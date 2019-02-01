@@ -5,7 +5,7 @@ import requests
 from io import BytesIO
 
 solr = pysolr.Solr("http://localhost:8983/solr/test_core", timeout=10)
-delete_hash = 'cea8f48e6f239fed2b190b26f7cbc672'
+delete_hash = '45172ac97d574bfd34a1005262a23169'
 m = hashlib.md5()
 
 def test_results():
@@ -26,6 +26,6 @@ def is_deleted(url):
     print(hashlib.md5(img).hexdigest())
 
     if m.hexdigest() == delete_hash:
-        return True
+        return True, m.hexdigest()
 
-    return False
+    return False, m.hexdigest()
