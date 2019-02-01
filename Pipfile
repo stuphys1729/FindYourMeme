@@ -13,6 +13,7 @@ pytesseract = "*"
 requests = "*"
 numpy = "*"
 keras = "*"
+sklearn = "*"
 
 [dev-packages]
 pylint = "*"
