@@ -105,3 +105,14 @@ venv.bak/
 
 # VS Code files
 .vscode
+
+*.jpg
+*.png
+*.jpeg
+*.gif
+Lab*/
+KerasExample/
+*.dat
+*.h5*.zip
+
+memes.json
