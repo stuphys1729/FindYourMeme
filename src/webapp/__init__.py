@@ -1,12 +1,14 @@
 from flask import Flask, url_for, request, render_template
-from .index import test_results, solr_search, setup_collection, fetch_meme
+from .index import solr_search, setup_collection, fetch_meme
 import threading
 
 
 app = Flask(__name__)
 
+# TODO threading is a bitch at the best of times, we can look into celery if we
+# really want but I suggest that for a project like this we just don't thread
+# in the first place
 # threading.Thread(target=setup_collection).start()
-
 
 @app.route('/')
 def index():

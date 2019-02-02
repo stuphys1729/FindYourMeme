@@ -19,12 +19,20 @@ def fetch_meme(meme_id):
         c = conn.cursor()
         result = c.execute("SELECT * FROM memes WHERE id=?", (meme_id,)).fetchone()
         conn.commit()
-    print(result)
+
     return result
 
 def write_meme(meme):
     # TODO
-    pass
+    with sqlite3.connect('test.db') as conn:
+        conn.row_factory = dict_factory
+        c = conn.cursor()
+        result = c.execute('''
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?)''',
+            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['imText']))
+        conn.commit()
+
+    return result
 
 def solr_search(query):
     if query == "*":
@@ -45,6 +53,8 @@ def setup_collection():
             "image_text": memeData[id]['imText']
         } for id in memeData]
 
+        print("--> Another Data <--")
+        print(data)
         solr.add(data, commit=True)
 
     else:
@@ -59,4 +69,6 @@ def setup_collection():
         "image_text": memeData[id]['imText']
     } for id in newData]
 
+    print("==> New Data Added <==")
+    print(data)
     solr.add(data, commit=True)
