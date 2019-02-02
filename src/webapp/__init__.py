@@ -21,5 +21,5 @@ def search():
 
 @app.route('/meme/<string:meme_id>')
 def meme(meme_id):
-    meme_result = test_results()[meme_id]
+    meme_result = test_results()[meme_id] # TODO revert this to actually fetching the correct meme
     return render_template('image.html', result=meme_result)

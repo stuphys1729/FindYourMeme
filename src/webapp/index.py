@@ -5,10 +5,15 @@ import os
 
 solr = pysolr.Solr("http://localhost:8983/solr/test_core", timeout=10)
 
+memeData = {}
+
 def test_results():
-    return memeData
+    return memeData # TODO fix
 
 def solr_search(query):
+    if query == "*":
+        return solr.search("*")
+
     return solr.search('title:' + query).docs
 
 def setup_collection():
