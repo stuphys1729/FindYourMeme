@@ -6,34 +6,33 @@
     {% if result %}
         <!-- {{ result }} -->
         <div id="meme-focus">
-            <img src="{{result[0]}}" alt="{{result[1]}}">
+            <img src="{{result['url']}}" alt="{{result['title']}}">
             <div id="meme-focus-results">
                 <table>
-                    <!-- <tr>
-                        <th>Metadata</th>
-                        <th></th>
-                    </tr> -->
                     <tr>
                         <td>URL</td>
-                        <td>{{ result[0] }}</td>
+                        <td>{{ result['url'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>{{ result['title'] }}</td>
                     </tr>
                     <tr>
                         <td>Caption</td>
-                        <td>{{ result[1] }}</td>
+                        <td>{{ result['image_text'] }}</td>
                     </tr>
                     <tr>
-                        <td>Data 1</td>
-                        <td>Value 1</td>
+                        <td>Permalink</td>
+                        <td>{{ result['plink'] }}</td>
                     </tr>
                     <tr>
-                        <td>Data 2</td>
-                        <td>Value 2</td>
+                        <td>Time Posted</td>
+                        <td>{{ result['time'] }}</td>
                     </tr>
                     <tr>
-                        <td>Data 3</td>
-                        <td>Value 3</td>
+                        <td>Subreddit</td>
+                        <td>{{ result['sub'] }}</td>
                     </tr>
-                    <tr>
                 </table>
             </div>
         </div>

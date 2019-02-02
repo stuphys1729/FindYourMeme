@@ -1,11 +1,11 @@
 from flask import Flask, url_for, request, render_template
-from .index import test_results, solr_search, setup_collection
+from .index import test_results, solr_search, setup_collection, fetch_meme
 import threading
 
 
 app = Flask(__name__)
 
-threading.Thread(target=setup_collection).start()
+# threading.Thread(target=setup_collection).start()
 
 
 @app.route('/')
@@ -21,5 +21,5 @@ def search():
 
 @app.route('/meme/<string:meme_id>')
 def meme(meme_id):
-    meme_result = test_results()[meme_id] # TODO revert this to actually fetching the correct meme
+    meme_result = fetch_meme(meme_id)
     return render_template('image.html', result=meme_result)
