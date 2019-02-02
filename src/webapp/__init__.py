@@ -25,3 +25,10 @@ def search():
 def meme(meme_id):
     meme_result = fetch_meme(meme_id)
     return render_template('image.html', result=meme_result)
+
+@app.route('/scrape')
+def scrape():
+    # TODO scrape from here
+    # setup_collection()
+    threading.Thread(target=setup_collection).start()
+    return "Scraping"

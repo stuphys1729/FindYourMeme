@@ -3,6 +3,7 @@ import json
 from .scraping import update_meme_data
 import os
 import sqlite3
+import time
 
 solr = pysolr.Solr("http://localhost:8983/solr/test_core", timeout=10)
 memeData = {}
@@ -23,7 +24,6 @@ def fetch_meme(meme_id):
     return result
 
 def write_meme(meme):
-    # TODO
     with sqlite3.connect('test.db') as conn:
         conn.row_factory = dict_factory
         c = conn.cursor()
@@ -36,39 +36,40 @@ def write_meme(meme):
 
 def solr_search(query):
     if query == "*":
-        return solr.search("*")
+        return solr.search("*", **{
+            'rows': '100'
+        })
 
     return solr.search('title:' + query).docs
 
 def setup_collection():
+    while True:
+        time.sleep(60)
+        print("Scraping...")
+        if os.path.isfile('memes.json'):
+            with open("memes.json", 'r') as f:
+                memeData = json.loads(f.read())
 
-    if os.path.isfile('memes.json'):
-        with open("memes.json", 'r') as f:
-            memeData = json.loads(f.read())
+            data = [ {
+                "id": id,
+                "title": memeData[id]['title'],
+                "url": memeData[id]['url'],
+                "image_text": memeData[id]['imText']
+            } for id in memeData]
+
+            solr.add(data, commit=True)
+
+        else:
+            memeData = {}
+
+        newData = update_meme_data(memeData)
 
         data = [ {
             "id": id,
             "title": memeData[id]['title'],
             "url": memeData[id]['url'],
             "image_text": memeData[id]['imText']
-        } for id in memeData]
+        } for id in newData]
 
-        print("--> Another Data <--")
-        print(data)
         solr.add(data, commit=True)
-
-    else:
-        memeData = {}
-
-    newData = update_meme_data(memeData)
-
-    data = [ {
-        "id": id,
-        "title": memeData[id]['title'],
-        "url": memeData[id]['url'],
-        "image_text": memeData[id]['imText']
-    } for id in newData]
-
-    print("==> New Data Added <==")
-    print(data)
-    solr.add(data, commit=True)
+        solr.commit()
