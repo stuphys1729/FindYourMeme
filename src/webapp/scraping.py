@@ -54,6 +54,8 @@ def update_meme_data(memeData):
         im = Image.open(requests.get(sub.url, stream=True).raw)
         newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
 
+        newData[sub.id]['time_of_index'] = str(datetime.now())
+
         updated += 1
 
     taken = (datetime.now() - start)
@@ -61,8 +63,10 @@ def update_meme_data(memeData):
         memeData.update(newData)
         print("Processed {} memes in {}".format(updated, taken))
 
-        data = json.dumps(memeData)
-        with open("memes.json", 'w') as f:
-            f.write(data)
+        # data = json.dumps(memeData)
+        # with open("memes.json", 'w') as f:
+        #     f.write(data)
+    else:
+        print("Retrieved 0 results")
 
     return newData

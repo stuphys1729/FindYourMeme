@@ -34,6 +34,7 @@ def create_db():
                 , score INTEGER
                 , upvote_ratio REAL
                 , over_18 TEXT
+                , time_of_index TEXT
         )''')
         conn.commit()
 
@@ -58,8 +59,8 @@ def write_meme(meme):
         c = conn.cursor()
 
         result = c.execute('''
-            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?)''',
-            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18']))
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)''',
+            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18'], meme['time_of_index']))
         conn.commit()
 
     return result
@@ -72,7 +73,7 @@ def write_memes_batch(meme_list):
         c = conn.cursor()
 
         result = c.executemany('''
-            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?)''',
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)''',
             meme_list)
         conn.commit()
 
@@ -101,11 +102,12 @@ def add_memes(source_dict):
         "plink": meme_data['plink'],
         "time": meme_data['time'],
         "sub": meme_data['sub'],
-        "image_text": meme_data['image_text'],
+        "image_text": " " + meme_data['image_text'],
         "posted_by": meme_data['posted_by'],
         "score": meme_data['score'],
         "upvote_ratio": meme_data['upvote_ratio'],
-        "over_18": meme_data['over_18']
+        "over_18": meme_data['over_18'],
+        "time_of_index": meme_data['time_of_index']
     } for meme_id, meme_data in source_dict.items()]
 
     data_tuples = [tuple(d.values()) for d in data]
