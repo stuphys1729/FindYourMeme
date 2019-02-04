@@ -29,7 +29,7 @@ def write_meme(meme):
         c = conn.cursor()
         result = c.execute('''
             INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?)''',
-            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['imText']))
+            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text']))
         conn.commit()
 
     return result
@@ -54,7 +54,7 @@ def setup_collection():
                 "id": id,
                 "title": memeData[id]['title'],
                 "url": memeData[id]['url'],
-                "image_text": memeData[id]['imText']
+                "image_text": memeData[id]['image_text']
             } for id in memeData]
 
             solr.add(data, commit=True)
@@ -68,7 +68,7 @@ def setup_collection():
             "id": id,
             "title": memeData[id]['title'],
             "url": memeData[id]['url'],
-            "image_text": memeData[id]['imText']
+            "image_text": memeData[id]['image_text']
         } for id in newData]
 
         solr.add(data, commit=True)

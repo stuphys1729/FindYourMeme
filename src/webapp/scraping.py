@@ -48,7 +48,7 @@ def update_meme_data(memeData):
         }
 
         im = Image.open(requests.get(sub.url, stream=True).raw)
-        newData[sub.id]["imText"] = pytesseract.image_to_string(im).replace('\n', ' ')
+        newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
 
         updated += 1
 

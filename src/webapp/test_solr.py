@@ -21,13 +21,13 @@ t_id = 'amem1w'
 #         , "plink": memeData[t_id]['plink']
 #         , "time": memeData[t_id]['time']
 #         , "sub": memeData[t_id]['sub']
-#         , "image_text": memeData[t_id]['imText']
+#         , "image_text": memeData[t_id]['image_text']
 #     }
 # ], commit=True)
 
 # for key in memeData:
 #     t_id = key
-#     print(memeData[t_id]['imText'])
+#     print(memeData[t_id]['image_text'])
 #     solr.add([
 #         {
 #             "id": t_id
@@ -36,7 +36,7 @@ t_id = 'amem1w'
 #             , "plink": memeData[t_id]['plink']
 #             , "time": memeData[t_id]['time']
 #             , "sub": memeData[t_id]['sub']
-#             , "image_text": ' ' + memeData[t_id]['imText']
+#             , "image_text": ' ' + memeData[t_id]['image_text']
 #         }
 #     ], commit=True)
 

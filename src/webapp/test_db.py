@@ -30,7 +30,7 @@ conn.commit()
 for key, meme in memeData.items():
     c.execute('''
         INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?)
-    ''', (key, meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['imText']
+    ''', (key, meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text']
     ))
 
 conn.commit()
