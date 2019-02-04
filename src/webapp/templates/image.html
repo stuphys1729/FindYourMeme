@@ -33,6 +33,22 @@
                         <td>Subreddit</td>
                         <td>{{ result['sub'] }}</td>
                     </tr>
+                    <tr>
+                        <td>Posted By</td>
+                        <td><a href="{{ 'https://reddit.com/u/' + result['posted_by']}}" target="_blank">{{ result['posted_by'] }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Score</td>
+                        <td>{{ result['score'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Upvote Ratio</td>
+                        <td>{{ result['upvote_ratio'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Over 18?</td>
+                        <td>{{ result['over_18'] }}</td>
+                    </tr>
                 </table>
             </div>
         </div>

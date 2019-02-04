@@ -82,7 +82,7 @@ def solr_search(query):
     if query == "*":
         search_query = "*"
     else:
-        search_query = "title:" + query
+        search_query = "_text_:" + query
 
     return solr.search(search_query).docs
 
