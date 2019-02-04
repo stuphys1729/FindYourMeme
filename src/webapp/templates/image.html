@@ -11,7 +11,7 @@
                 <table>
                     <tr>
                         <td>URL</td>
-                        <td>{{ result['url'] }}</td>
+                        <td><a href="{{ result['url'] }}" target="_blank">{{ result['url'] }}</a></td>
                     </tr>
                     <tr>
                         <td>Title</td>
@@ -23,7 +23,7 @@
                     </tr>
                     <tr>
                         <td>Permalink</td>
-                        <td>{{ result['plink'] }}</td>
+                        <td><a href="{{ 'https://reddit.com' + result['plink'] }}" target="_blank">{{ result['plink'] }}</a></td>
                     </tr>
                     <tr>
                         <td>Time Posted</td>
