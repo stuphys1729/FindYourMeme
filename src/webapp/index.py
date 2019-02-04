@@ -80,28 +80,17 @@ def write_memes_batch(meme_list):
 
 def solr_search(query):
     if query == "*":
-        return solr.search("*", **{
-            'rows': '100'
-        })
+        search_query = "*"
+    else:
+        search_query = "title:" + query
 
-    return solr.search('title:' + query).docs
+    return solr.search(search_query).docs
 
 def setup_collection():
     while True:
         time.sleep(10)
         print("Scraping...")
-
-        # if os.path.isfile('memes.json'):
-        #     with open("memes.json", 'r') as f:
-        #         memeData = json.loads(f.read())
-
-        #     add_to_solr(memeData)
-
-        # else:
-        #     memeData = {}
-
         newData = update_meme_data(memeData)
-
         add_memes(newData)
 
 def add_memes(source_dict):
@@ -119,18 +108,6 @@ def add_memes(source_dict):
         "over_18": meme_data['over_18']
     } for meme_id, meme_data in source_dict.items()]
 
-    # TODO add to both solr and db
-    # solr.add(data, commit=True)
-
     data_tuples = [tuple(d.values()) for d in data]
-    for t in data_tuples:
-        print(len(t))
     write_memes_batch(data_tuples)
     solr.add(data, commit=True)
-
-    # Serial addition of memes so that each meme is added one after
-    # another to both the db and solr
-    # for meme in data:
-    #     print(meme)
-    #     write_meme(meme)
-    #     solr.add(meme, commit=True)
