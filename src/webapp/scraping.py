@@ -44,7 +44,11 @@ def update_meme_data(memeData):
             "url"  : sub.url,
             "plink": sub.permalink,
             "time" : sub.created_utc,
-            "sub"  : subreddit
+            "sub"  : subreddit,
+            "posted_by": sub.author.name,
+            "score": sub.score,
+            "upvote_ratio": sub.upvote_ratio,
+            "over_18": sub.over_18
         }
 
         im = Image.open(requests.get(sub.url, stream=True).raw)

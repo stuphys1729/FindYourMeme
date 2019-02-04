@@ -43,33 +43,35 @@ def solr_search(query):
     return solr.search('title:' + query).docs
 
 def setup_collection():
+    # TODO this is gonna have to change given that new data is being added
     while True:
-        time.sleep(60)
+        time.sleep(10)
         print("Scraping...")
-        if os.path.isfile('memes.json'):
-            with open("memes.json", 'r') as f:
-                memeData = json.loads(f.read())
 
-            data = [ {
-                "id": id,
-                "title": memeData[id]['title'],
-                "url": memeData[id]['url'],
-                "image_text": memeData[id]['image_text']
-            } for id in memeData]
+        # if os.path.isfile('memes.json'):
+        #     with open("memes.json", 'r') as f:
+        #         memeData = json.loads(f.read())
 
-            solr.add(data, commit=True)
+        #     add_to_solr(memeData)
 
-        else:
-            memeData = {}
+        # else:
+        #     memeData = {}
 
         newData = update_meme_data(memeData)
 
-        data = [ {
-            "id": id,
-            "title": memeData[id]['title'],
-            "url": memeData[id]['url'],
-            "image_text": memeData[id]['image_text']
-        } for id in newData]
+        add_to_solr(newData)
 
-        solr.add(data, commit=True)
-        solr.commit()
+def add_to_solr(source_dict):
+    data = [{
+        "id": meme_id,
+        "title": meme_data['title'],
+        "url": meme_data['url'],
+        "image_text": meme_data['image_text'],
+        "posted_by": meme_data['posted_by'],
+        "score": meme_data['score'],
+        "upvote_ratio": meme_data['upvote_ratio'],
+        "over_18": meme_data['over_18']
+    } for meme_id, meme_data in source_dict.items()]
+
+    # TODO add to both solr and db
+    solr.add(data, commit=True)
