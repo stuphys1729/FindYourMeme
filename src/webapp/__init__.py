@@ -1,9 +1,10 @@
 from flask import Flask, url_for, request, render_template
-from .index import solr_search, setup_collection, fetch_meme
+from .index import solr_search, setup_collection, fetch_meme, create_db
 import threading
 
 
 app = Flask(__name__)
+create_db()
 
 # TODO threading is a bitch at the best of times, we can look into celery if we
 # really want but I suggest that for a project like this we just don't thread

@@ -5,7 +5,10 @@ import os
 import sqlite3
 import time
 
-solr = pysolr.Solr("http://localhost:8983/solr/test_core", timeout=10)
+core_name = "meme_data"
+db_name = "memes.db"
+
+solr = pysolr.Solr("http://localhost:8983/solr/" + core_name, timeout=10)
 memeData = {}
 
 def dict_factory(cursor, row):
@@ -15,7 +18,7 @@ def dict_factory(cursor, row):
     return d
 
 def create_db():
-    with sqlite3.connect('memes.db') as conn:
+    with sqlite3.connect(db_name) as conn:
         conn.row_factory = dict_factory
         c = conn.cursor()
         c.execute('''
@@ -34,8 +37,12 @@ def create_db():
         )''')
         conn.commit()
 
+    print("Database created successfully")
+
 def fetch_meme(meme_id):
-    with sqlite3.connect('test.db') as conn:
+    result = None
+
+    with sqlite3.connect(db_name) as conn:
         conn.row_factory = dict_factory
         c = conn.cursor()
         result = c.execute("SELECT * FROM memes WHERE id=?", (meme_id,)).fetchone()
@@ -44,13 +51,29 @@ def fetch_meme(meme_id):
     return result
 
 def write_meme(meme):
-    with sqlite3.connect('test.db') as conn:
+    result = None
+
+    with sqlite3.connect(db_name) as conn:
         conn.row_factory = dict_factory
         c = conn.cursor()
 
         result = c.execute('''
-            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?)''',
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?)''',
             (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18']))
+        conn.commit()
+
+    return result
+
+def write_memes_batch(meme_list):
+    result = None
+
+    with sqlite3.connect('memes.db') as conn:
+        conn.row_factory = dict_factory
+        c = conn.cursor()
+
+        result = c.executemany('''
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?)''',
+            meme_list)
         conn.commit()
 
     return result
@@ -64,7 +87,6 @@ def solr_search(query):
     return solr.search('title:' + query).docs
 
 def setup_collection():
-    # TODO this is gonna have to change given that new data is being added
     while True:
         time.sleep(10)
         print("Scraping...")
@@ -80,13 +102,16 @@ def setup_collection():
 
         newData = update_meme_data(memeData)
 
-        add_to_solr(newData)
+        add_memes(newData)
 
-def add_to_solr(source_dict):
+def add_memes(source_dict):
     data = [{
         "id": meme_id,
         "title": meme_data['title'],
         "url": meme_data['url'],
+        "plink": meme_data['plink'],
+        "time": meme_data['time'],
+        "sub": meme_data['sub'],
         "image_text": meme_data['image_text'],
         "posted_by": meme_data['posted_by'],
         "score": meme_data['score'],
@@ -95,4 +120,17 @@ def add_to_solr(source_dict):
     } for meme_id, meme_data in source_dict.items()]
 
     # TODO add to both solr and db
+    # solr.add(data, commit=True)
+
+    data_tuples = [tuple(d.values()) for d in data]
+    for t in data_tuples:
+        print(len(t))
+    write_memes_batch(data_tuples)
     solr.add(data, commit=True)
+
+    # Serial addition of memes so that each meme is added one after
+    # another to both the db and solr
+    # for meme in data:
+    #     print(meme)
+    #     write_meme(meme)
+    #     solr.add(meme, commit=True)

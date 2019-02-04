@@ -22,7 +22,7 @@ _user_agent = 'windows:FindYourMeme:0.1'
 r = praw.Reddit(client_id=_clientId, client_secret=_secret, user_agent=_user_agent)
 image_extensions = ('.jpg', '.png', '.gif')
 
-memeLimit = 100
+memeLimit = 5
 
 def update_meme_data(memeData):
 
