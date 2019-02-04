@@ -14,6 +14,26 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
+def create_db():
+    with sqlite3.connect('memes.db') as conn:
+        conn.row_factory = dict_factory
+        c = conn.cursor()
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS memes(
+                id PRIMARY KEY
+                , title TEXT
+                , url TEXT
+                , plink TEXT
+                , time TEXT
+                , sub TEXT
+                , image_text TEXT
+                , posted_by TEXT
+                , score INTEGER
+                , upvote_ratio REAL
+                , over_18 TEXT
+        )''')
+        conn.commit()
+
 def fetch_meme(meme_id):
     with sqlite3.connect('test.db') as conn:
         conn.row_factory = dict_factory
@@ -27,9 +47,10 @@ def write_meme(meme):
     with sqlite3.connect('test.db') as conn:
         conn.row_factory = dict_factory
         c = conn.cursor()
+
         result = c.execute('''
-            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?)''',
-            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text']))
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?)''',
+            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18']))
         conn.commit()
 
     return result

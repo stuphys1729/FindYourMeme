@@ -116,12 +116,16 @@
     <field name="_root_" type="string" indexed="true" stored="false" docValues="false" />
     <field name="_text_" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
-    <field name="title"      type="text_general" required="true" indexed="true" stored="true"/>
-    <field name="url"        type="text_general" required="true" indexed="true" stored="true"/>
-    <field name="plink"      type="text_general" required="true" indexed="true" stored="true"/>
-    <field name="time"       type="text_general" required="true" indexed="true" stored="true"/>
-    <field name="sub"        type="text_general" required="true" indexed="true" stored="true"/>
-    <field name="image_text" type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="title"        type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="url"          type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="plink"        type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="time"         type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="sub"          type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="image_text"   type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="posted_by"    type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="score"        type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="upvote_ratio" type="text_general" required="true" indexed="true" stored="true"/>
+    <field name="over_18"      type="text_general" required="true" indexed="true" stored="true"/>
     <!-- <field name="collector" type="text_general" indexed="true" stored="false" multiValued="true"/> -->
 
 
