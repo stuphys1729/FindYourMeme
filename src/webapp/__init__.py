@@ -18,9 +18,19 @@ def index():
 @app.route('/search', methods=('GET',))
 def search():
     search_term = request.args.get('s')
-    link_results = solr_search(search_term)
+    no_terms = int(request.args.get('n'))
+    page_no = int(request.args.get('p'))
 
-    return render_template('index.html', results=link_results, search_term=search_term)
+    if len(search_term) == 0:
+        search_term = "*"
+
+    link_results = solr_search(search_term, no_terms, page_no)
+
+    return render_template('index.html' \
+        , results=link_results \
+        , search_term=search_term \
+        , page_no=page_no \
+        , no_terms=no_terms)
 
 @app.route('/meme/<string:meme_id>')
 def meme(meme_id):

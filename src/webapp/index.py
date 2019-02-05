@@ -79,20 +79,23 @@ def write_memes_batch(meme_list):
 
     return result
 
-def solr_search(query):
+def solr_search(query, no_terms, page_no):
     if query == "*":
         search_query = "*"
     else:
         search_query = "_text_:" + query
 
-    return solr.search(search_query).docs
+    return solr.search(search_query, **{
+        "rows": str(no_terms)
+        , "start": str(page_no*no_terms)
+    }).docs
 
 def setup_collection():
-    while True:
-        time.sleep(10)
-        print("Scraping...")
-        newData = update_meme_data(memeData)
-        add_memes(newData)
+    # while True:
+    #     time.sleep(10)
+    print("Scraping...")
+    newData = update_meme_data(memeData)
+    add_memes(newData)
 
 def add_memes(source_dict):
     data = [{
@@ -113,3 +116,4 @@ def add_memes(source_dict):
     data_tuples = [tuple(d.values()) for d in data]
     write_memes_batch(data_tuples)
     solr.add(data, commit=True)
+    solr.commit()
