@@ -133,22 +133,22 @@ td:nth-child(1) {
 
 #nav-buttons {
     height: 50px;
-    background-color: #333;
     margin: 0 auto;
 }
 
 #nav-buttons form {
     word-spacing: 0;
+    margin: 0 auto;
+    display: inline;
 }
 
 #nav-buttons input {
     padding: 10px;
-    display: inline-block;
     border: none;
 }
 
-#nav-buttons input[type=button] {
-    background-color: white;
-    color: #333;
+#nav-buttons input[type=submit] {
+    background-color: grey;
+    color: black;
     height: 100%;
 }

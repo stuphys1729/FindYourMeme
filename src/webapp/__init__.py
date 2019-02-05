@@ -30,7 +30,8 @@ def search():
         , results=link_results \
         , search_term=search_term \
         , page_no=page_no \
-        , no_terms=no_terms)
+        , no_terms=no_terms
+        , nav=True)
 
 @app.route('/meme/<string:meme_id>')
 def meme(meme_id):
