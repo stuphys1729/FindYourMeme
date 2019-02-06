@@ -6,34 +6,53 @@
     {% if result %}
         <!-- {{ result }} -->
         <div id="meme-focus">
-            <img src="{{result[0]}}" alt="{{result[1]}}">
+            <img src="{{result['url']}}" alt="{{result['title']}}">
             <div id="meme-focus-results">
                 <table>
-                    <!-- <tr>
-                        <th>Metadata</th>
-                        <th></th>
-                    </tr> -->
                     <tr>
                         <td>URL</td>
-                        <td>{{ result[0] }}</td>
+                        <td><a href="{{ result['url'] }}" target="_blank">{{ result['url'] }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>{{ result['title'] }}</td>
                     </tr>
                     <tr>
                         <td>Caption</td>
-                        <td>{{ result[1] }}</td>
+                        <td>{{ result['image_text'] }}</td>
                     </tr>
                     <tr>
-                        <td>Data 1</td>
-                        <td>Value 1</td>
+                        <td>Permalink</td>
+                        <td><a href="{{ 'https://reddit.com' + result['plink'] }}" target="_blank">{{ result['plink'] }}</a></td>
                     </tr>
                     <tr>
-                        <td>Data 2</td>
-                        <td>Value 2</td>
+                        <td>Time Posted</td>
+                        <td>{{ result['time'] }}</td>
                     </tr>
                     <tr>
-                        <td>Data 3</td>
-                        <td>Value 3</td>
+                        <td>Subreddit</td>
+                        <td>{{ result['sub'] }}</td>
                     </tr>
                     <tr>
+                        <td>Posted By</td>
+                        <td><a href="{{ 'https://reddit.com/u/' + result['posted_by']}}" target="_blank">{{ result['posted_by'] }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Score</td>
+                        <td>{{ result['score'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Upvote Ratio</td>
+                        <td>{{ result['upvote_ratio'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Over 18?</td>
+                        <td>{{ result['over_18'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Time of Index</td>
+                        <td>{{ result['time_of_index'] }}</td>
+                    </tr>
                 </table>
             </div>
         </div>

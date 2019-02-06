@@ -38,6 +38,13 @@ header input[type=text] {
     width: 500px;
 }
 
+header input[type=number] {
+    color: #333;
+    border: none;
+    background-color: white;
+    width: 100px;
+}
+
 header input[type=submit] {
     margin-left: 0 !important;
     background-color: grey;
@@ -122,4 +129,26 @@ td, th {
 td:nth-child(1) {
     font-weight: 700;
     border-right: black solid 2px;
+}
+
+#nav-buttons {
+    height: 50px;
+    margin: 0 auto;
+}
+
+#nav-buttons form {
+    word-spacing: 0;
+    margin: 0 auto;
+    display: inline;
+}
+
+#nav-buttons input {
+    padding: 10px;
+    border: none;
+}
+
+#nav-buttons input[type=submit] {
+    background-color: grey;
+    color: black;
+    height: 100%;
 }
