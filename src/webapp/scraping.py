@@ -6,12 +6,17 @@ import praw, requests
 from PIL import Image
 import pytesseract
 import numpy as np
+from keras.preprocessing.image import img_to_array
+from keras.models import load_model
+import imutils
+import pickle
+import cv2
+import os
 
 if sys.platform == "win32":
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe' #<-Change this for your system
 
-
-subreddit = 'dankmemes'
+subreddits = ['dankmemes', 'adviceanimals']
 
 # The credentials below are linked to my (Stewart) reddit account, if you want
 # to do any of your own research please generate your own (guide linked to from
@@ -23,50 +28,76 @@ r = praw.Reddit(client_id=_clientId, client_secret=_secret, user_agent=_user_age
 image_extensions = ('.jpg', '.png', '.gif')
 
 memeLimit = 50
+model = None
+mlb = None
+modelPath = 'multiAdviceAnimals.h5'
+labelPath = 'mlbAA.pickle'
 
 def update_meme_data(memeData):
 
-    subs = r.subreddit(subreddit).new(limit=memeLimit)
-
-    start = datetime.now()
-    updated = 0
     newData = {}
-    for sub in subs:
+    for subreddit in subreddits:
 
-        if sub.id in memeData:
-            break
+        subs = r.subreddit(subreddit).new(limit=memeLimit)
+        start = datetime.now()
+        updated = 0
+        for sub in subs:
 
-        if not sub.url.endswith(image_extensions):
-            continue
+            if sub.id in memeData:
+                break
 
-        newData[sub.id] = {
-            "title": sub.title,
-            "url"  : sub.url,
-            "plink": sub.permalink,
-            "time" : sub.created_utc,
-            "sub"  : subreddit,
-            "posted_by": sub.author.name,
-            "score": sub.score,
-            "upvote_ratio": sub.upvote_ratio,
-            "over_18": sub.over_18
-        }
+            if not sub.url.endswith(image_extensions):
+                continue
 
-        im = Image.open(requests.get(sub.url, stream=True).raw)
-        newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
+            newData[sub.id] = {
+                "title": sub.title,
+                "url"  : sub.url,
+                "plink": sub.permalink,
+                "time" : sub.created_utc,
+                "sub"  : subreddit,
+                "posted_by": sub.author.name,
+                "score": sub.score,
+                "upvote_ratio": sub.upvote_ratio,
+                "over_18": sub.over_18
+            }
 
-        newData[sub.id]['time_of_index'] = str(datetime.now())
+            image = Image.open(requests.get(sub.url, stream=True).raw)
+            im = image.convert('L')
+            newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
 
-        updated += 1
+            newData[sub.id]['time_of_index'] = str(datetime.now())
 
-    taken = (datetime.now() - start)
-    if updated != 0:
-        memeData.update(newData)
-        print("Processed {} memes in {}".format(updated, taken))
+            # pre-process the image for classification
+            im = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            im = cv2.resize(im, (96, 96))
+            im = im.astype("float") / 255.0
+            im = img_to_array(im)
+            im = np.expand_dims(im, axis=0)
 
-        # data = json.dumps(memeData)
-        # with open("memes.json", 'w') as f:
-        #     f.write(data)
-    else:
-        print("Retrieved 0 results")
+            # load the trained convolutional neural network and the multi-label
+            # binarizer
+            global model
+            global mlb
+            if model == None:
+                print("[INFO] loading network...")
+                model = load_model(modelPath)
+                mlb = pickle.loads(open(labelPath, "rb").read())
+
+            proba = model.predict(im)[0]
+            idx = np.argsort(proba)[::-1][0]
+            pred = mlb.classes_[idx]
+
+            if proba[idx] > 0.97:
+                newData[sub.id]["format"] = mlb.classes_[idx].replace('-', ' ')
+                print("Assigning class {} to meme {} with probability {}".format(pred, sub.url, proba[idx]))
+            else:
+                newData[sub.id]['format'] = ''
+
+            updated += 1
+
+        taken = (datetime.now() - start)
+        if updated != 0:
+            memeData.update(newData)
+            print("Processed {} memes from {} in {}".format(updated, subreddit, taken))
 
     return newData
