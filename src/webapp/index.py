@@ -117,3 +117,6 @@ def add_memes(source_dict):
     write_memes_batch(data_tuples)
     solr.add(data, commit=True)
     solr.commit()
+
+def sync_solr_with_db():
+    pass
