@@ -1,6 +1,7 @@
 from flask import Flask, url_for, request, render_template
 from .index import solr_search, setup_collection, fetch_meme, create_db
 import threading
+import string
 
 
 app = Flask(__name__)
@@ -24,6 +25,11 @@ def search():
     if len(search_term) == 0:
         search_term = "*"
 
+    # Check params in GET request
+    no_terms = search_param_check(no_terms)
+    page_no = search_param_check(page_no)
+    search_term = preprocess(search_term)
+
     link_results = solr_search(search_term, no_terms, page_no)
 
     return render_template('index.html' \
@@ -44,3 +50,23 @@ def scrape():
     # setup_collection()
     threading.Thread(target=setup_collection).start()
     return "Scraping"
+
+def search_param_check(number):
+    if number < 1:
+        return 1
+    elif number > 10000:
+        return 10000
+    else:
+        return number
+
+def preprocess(search_term):
+    '''
+    Steps:
+        Remove punctuation
+    '''
+    search_term = search_term.translate(str.maketrans('', '', string.punctuation))
+
+    if len(search_term) == 0:
+        search_term = '*'
+
+    return search_term
