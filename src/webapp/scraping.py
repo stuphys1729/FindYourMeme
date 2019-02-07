@@ -10,8 +10,7 @@ import numpy as np
 if sys.platform == "win32":
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe' #<-Change this for your system
 
-
-subreddit = 'dankmemes'
+subreddits = ['dankmemes', 'adviceanimals']
 
 # The credentials below are linked to my (Stewart) reddit account, if you want
 # to do any of your own research please generate your own (guide linked to from
@@ -26,47 +25,57 @@ memeLimit = 50
 
 def update_meme_data(memeData):
 
-    subs = r.subreddit(subreddit).new(limit=memeLimit)
-
-    start = datetime.now()
-    updated = 0
     newData = {}
-    for sub in subs:
+    for subreddit in subreddits:
 
-        if sub.id in memeData:
-            break
+        subs = r.subreddit(subreddit).new(limit=memeLimit)
+        start = datetime.now()
+        updated = 0
+        for sub in subs:
 
-        if not sub.url.endswith(image_extensions):
-            continue
+            if sub.id in memeData:
+                break
 
-        newData[sub.id] = {
-            "title": sub.title,
-            "url"  : sub.url,
-            "plink": sub.permalink,
-            "time" : sub.created_utc,
-            "sub"  : subreddit,
-            "posted_by": sub.author.name,
-            "score": sub.score,
-            "upvote_ratio": sub.upvote_ratio,
-            "over_18": sub.over_18
-        }
+            if not sub.url.endswith(image_extensions):
+                continue
 
-        im = Image.open(requests.get(sub.url, stream=True).raw)
-        newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
+            skip = False
+            try:
+                image = Image.open(requests.get(sub.url, stream=True).raw)
+            except OSError:
+                print("Had an image read error")
+                skip = True
+            if skip:
+                continue
 
-        newData[sub.id]['time_of_index'] = str(datetime.now())
+            newData[sub.id] = {
+                "title": sub.title,
+                "url"  : sub.url,
+                "plink": sub.permalink,
+                "time" : sub.created_utc,
+                "sub"  : subreddit,
+                "score": sub.score,
+                "upvote_ratio": sub.upvote_ratio,
+                "over_18": sub.over_18
+            }
 
-        updated += 1
+            if sub.author:
+                newData[sub.id]["posted_by"] = sub.author.name
+            else:
+                newData[sub.id]["posted_by"] = '[deleted]'
 
-    taken = (datetime.now() - start)
-    if updated != 0:
-        memeData.update(newData)
-        print("Processed {} memes in {}".format(updated, taken))
+            im = image.convert('L')
+            newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
 
-        # data = json.dumps(memeData)
-        # with open("memes.json", 'w') as f:
-        #     f.write(data)
-    else:
-        print("Retrieved 0 results")
+            newData[sub.id]['time_of_index'] = str(datetime.now())
+
+            newData[sub.id]['format'] = ''
+
+            updated += 1
+
+        taken = (datetime.now() - start)
+        if updated != 0:
+            memeData.update(newData)
+            print("Processed {} memes from {} in {}".format(updated, subreddit, taken))
 
     return newData

@@ -35,6 +35,7 @@ def create_db():
                 , upvote_ratio REAL
                 , over_18 TEXT
                 , time_of_index TEXT
+                , format TEXT
         )''')
         conn.commit()
 
@@ -59,8 +60,8 @@ def write_meme(meme):
         c = conn.cursor()
 
         result = c.execute('''
-            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)''',
-            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18'], meme['time_of_index']))
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18'], meme['time_of_index'], meme['format']))
         conn.commit()
 
     return result
@@ -73,7 +74,7 @@ def write_memes_batch(meme_list):
         c = conn.cursor()
 
         result = c.executemany('''
-            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)''',
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)''',
             meme_list)
         conn.commit()
 
@@ -91,11 +92,11 @@ def solr_search(query, no_terms, page_no):
     }).docs
 
 def setup_collection():
-    # while True:
-    #     time.sleep(10)
     print("Scraping...")
-    newData = update_meme_data(memeData)
-    add_memes(newData)
+    while True:
+        time.sleep(60)
+        newData = update_meme_data(memeData)
+        add_memes(newData)
 
 def add_memes(source_dict):
     data = [{
@@ -110,7 +111,8 @@ def add_memes(source_dict):
         "score": meme_data['score'],
         "upvote_ratio": meme_data['upvote_ratio'],
         "over_18": meme_data['over_18'],
-        "time_of_index": meme_data['time_of_index']
+        "time_of_index": meme_data['time_of_index'],
+        "format": meme_data['format']
     } for meme_id, meme_data in source_dict.items()]
 
     data_tuples = [tuple(d.values()) for d in data]
@@ -125,3 +127,12 @@ def sync_solr_with_db():
 
         results = c.execute('SELECT * FROM memes').fetchall()
         solr.add(results, commit=True)
+
+def is_id_in_db(meme_id):
+    with sqlite3.connect(db_name) as conn:
+        c = conn.cursor()
+
+        if len(c.execute("SELECT * FROM memes WHERE id = ?", (meme_id,)).fetchall()) > 0:
+            return True
+
+        return False
