@@ -44,8 +44,13 @@ def update_meme_data(db_check_fn):
         for sub in subs:
 
             if db_check_fn(sub.id):
-                print("Found meme already in db")
-                break
+                # Only need to update these fields
+                newData[sub.id] = {
+                    "score": sub.score,
+                    "upvote_ratio": sub.upvote_ratio,
+                    "time_of_index": str(datetime.now())
+                }
+                continue
 
             if not sub.url.endswith(image_extensions):
                 continue
