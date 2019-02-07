@@ -116,3 +116,5 @@ KerasExample/
 *.h5*.zip
 
 memes.json
+oldmemes.json
+*.db

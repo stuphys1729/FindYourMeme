@@ -10,6 +10,8 @@
                 <div id="search-box" class="center center-text">
                     <form action="/search" method="get">
                         <input type="text" name="s" id="search-box" value="{{ search_term }}">
+                        <input type="number" name="n" id="no-terms-box" min="10" max="1000" value="10">
+                        <input type="hidden" name="p" value="0">
                         <input type="submit" value="Search">
                     </form>
     {% else %}
@@ -18,10 +20,11 @@
                 <a href="{{ url_for('index') }}">
                     <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt="FindYourMeme">
                 </a>
-                <!-- <img src="{{ url_for('static',filename='img/logo-black-small.png') }}" alt=""> -->
                 <div id="search-box" class="center center-text">
                     <form action="/search" method="get">
                         <input type="text" name="s" id="search-box">
+                        <input type="number" name="n" id="no-terms-box" min="10" max="1000" value="10">
+                        <input type="hidden" name="p" value="0">
                         <input type="submit" value="Search">
                     </form>
                 </div>
@@ -41,4 +44,26 @@
             </div>
         </div>
     </div>
+    {% if nav %}
+        <div id="nav-buttons">
+            <div id="nav-buttons-forms" class="center center-text">
+                {% if page_no > 0 %}
+                    <form action="/search" method="GET">
+                        <input type="submit" value="Prev">
+                        <input type="hidden" name="p" value="{{ page_no - 1 }}">
+                        <input type="hidden" name="n" value="{{ no_terms }}">
+                        <input type="hidden" name="s" value="{{ search_term }}">
+                    </form>
+                {% endif %}
+                {% if results|length > 0 %}
+                    <form action="/search" method="GET">
+                        <input type="submit" value="Next">
+                        <input type="hidden" name="p" value="{{ page_no + 1 }}">
+                        <input type="hidden" name="n" value="{{ no_terms }}">
+                        <input type="hidden" name="s" value="{{ search_term }}">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
