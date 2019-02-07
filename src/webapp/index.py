@@ -95,7 +95,7 @@ def setup_collection():
     print("Scraping...")
     while True:
         time.sleep(60)
-        newData = update_meme_data(memeData)
+        newData = update_meme_data(is_id_in_db)
         add_memes(newData)
 
 def add_memes(source_dict):

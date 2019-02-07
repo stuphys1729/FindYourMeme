@@ -27,13 +27,13 @@ _user_agent = 'windows:FindYourMeme:0.1'
 r = praw.Reddit(client_id=_clientId, client_secret=_secret, user_agent=_user_agent)
 image_extensions = ('.jpg', '.png', '.gif')
 
-memeLimit = 1000
+memeLimit = 20
 model = None
 mlb = None
 modelPath = 'multiAdviceAnimals.h5'
 labelPath = 'mlbAA.pickle'
 
-def update_meme_data(memeData):
+def update_meme_data(db_check_fn):
 
     newData = {}
     for subreddit in subreddits:
@@ -43,7 +43,8 @@ def update_meme_data(memeData):
         updated = 0
         for sub in subs:
 
-            if sub.id in memeData:
+            if db_check_fn(sub.id):
+                print("Found meme already in db")
                 break
 
             if not sub.url.endswith(image_extensions):
@@ -109,7 +110,6 @@ def update_meme_data(memeData):
 
         taken = (datetime.now() - start)
         if updated != 0:
-            memeData.update(newData)
             print("Processed {} memes from {} in {}".format(updated, subreddit, taken))
 
     return newData
