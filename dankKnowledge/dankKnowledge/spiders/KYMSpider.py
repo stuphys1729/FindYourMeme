@@ -28,7 +28,12 @@ formats = [
     'is-this-a-pigeon',
     'annoyed-picard',
     'do-you-want-ants',
-    'ultra-instinct-shaggy'
+    'ultra-instinct-shaggy',
+    'lisa-simpsons-presentation',
+    'thanos-edits',
+    'spongebob-squarepants',
+    'shrek',
+    'epic-handshake'
     ]
 #thisRun = 9
 
