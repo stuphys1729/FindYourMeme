@@ -118,3 +118,4 @@ KerasExample/
 memes.json
 oldmemes.json
 *.db
+old_dbs/
