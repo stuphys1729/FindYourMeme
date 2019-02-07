@@ -1,6 +1,7 @@
 from flask import Flask, url_for, request, render_template
 from .index import solr_search, setup_collection, fetch_meme, create_db, sync_solr_with_db
 import threading
+from collections import defaultdict
 
 
 app = Flask(__name__)
@@ -20,17 +21,19 @@ def search():
     search_term = request.args.get('s')
     no_terms = int(request.args.get('n'))
     page_no = int(request.args.get('p'))
+    time_since = request.args.get('t')
 
     if len(search_term) == 0:
         search_term = "*"
 
-    link_results = solr_search(search_term, no_terms, page_no)
+    link_results = solr_search(search_term, no_terms, page_no, time_since)
 
     return render_template('index.html' \
         , results=link_results \
         , search_term=search_term \
         , page_no=page_no \
         , no_terms=no_terms
+        , time_since=time_since
         , nav=True)
 
 @app.route('/meme/<string:meme_id>')
