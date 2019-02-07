@@ -117,3 +117,12 @@ def add_memes(source_dict):
     write_memes_batch(data_tuples)
     solr.add(data, commit=True)
     solr.commit()
+
+def is_id_in_db(meme_id):
+    with sqlite3.connect(db_name) as conn:
+        c = conn.cursor()
+
+        if len(c.execute("SELECT * FROM memes WHERE id = ?", (meme_id,)).fetchall()) > 0:
+            return True
+
+        return False
