@@ -15,8 +15,8 @@ conn_m.row_factory = dict_factory
 cm = conn_m.cursor()
 cn = conn_n.cursor()
 
-# cn.execute('''DROP TABLE memes''')
-# conn_n.commit()
+cn.execute('''DROP TABLE memes''')
+conn_n.commit()
 
 cn.execute('''
             CREATE TABLE memes(

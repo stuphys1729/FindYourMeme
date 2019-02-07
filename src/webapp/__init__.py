@@ -1,5 +1,5 @@
 from flask import Flask, url_for, request, render_template
-from .index import solr_search, setup_collection, fetch_meme, create_db
+from .index import solr_search, setup_collection, fetch_meme, create_db, sync_solr_with_db
 import threading
 
 
@@ -44,3 +44,8 @@ def scrape():
     # setup_collection()
     threading.Thread(target=setup_collection).start()
     return "Scraping"
+
+@app.route('/sync')
+def sync():
+    sync_solr_with_db()
+    return("Sync complete")
