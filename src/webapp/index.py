@@ -120,6 +120,16 @@ def add_memes(source_dict):
     solr.add(data, commit=True)
     solr.commit()
 
+def sync_solr_with_db():
+    solr.delete(q="*:*")
+
+    with sqlite3.connect(db_name) as conn:
+        conn.row_factory = dict_factory
+        c = conn.cursor()
+
+        results = c.execute('SELECT * FROM memes').fetchall()
+        solr.add(results, commit=True)
+
 def is_id_in_db(meme_id):
     with sqlite3.connect(db_name) as conn:
         c = conn.cursor()
