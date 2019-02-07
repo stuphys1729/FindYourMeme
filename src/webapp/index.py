@@ -39,3 +39,13 @@ def setup_collection():
     } for id in newData]
 
     solr.add(data, commit=True)
+    solr.commit()
+
+def is_id_in_db(meme_id):
+    with sqlite3.connect(db_name) as conn:
+        c = conn.cursor()
+
+        if len(c.execute("SELECT * FROM memes WHERE id = ?", (meme_id,)).fetchall()) > 0:
+            return True
+
+        return False
