@@ -94,7 +94,7 @@ def solr_search(query, no_terms, page_no):
 def setup_collection():
     print("Scraping...")
     while True:
-        time.sleep(10)
+        time.sleep(60)
         newData = update_meme_data(memeData)
         add_memes(newData)
 

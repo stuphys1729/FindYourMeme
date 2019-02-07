@@ -39,19 +39,31 @@ def update_meme_data(memeData):
             if not sub.url.endswith(image_extensions):
                 continue
 
+            skip = False
+            try:
+                image = Image.open(requests.get(sub.url, stream=True).raw)
+            except OSError:
+                print("Had an image read error")
+                skip = True
+            if skip:
+                continue
+
             newData[sub.id] = {
                 "title": sub.title,
                 "url"  : sub.url,
                 "plink": sub.permalink,
                 "time" : sub.created_utc,
                 "sub"  : subreddit,
-                "posted_by": sub.author.name,
                 "score": sub.score,
                 "upvote_ratio": sub.upvote_ratio,
                 "over_18": sub.over_18
             }
 
-            image = Image.open(requests.get(sub.url, stream=True).raw)
+            if sub.author:
+                newData[sub.id]["posted_by"] = sub.author.name
+            else:
+                newData[sub.id]["posted_by"] = '[deleted]'
+
             im = image.convert('L')
             newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
 
