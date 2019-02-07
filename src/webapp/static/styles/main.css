@@ -38,11 +38,15 @@ header input[type=text] {
     width: 500px;
 }
 
-header input[type=number] {
+header input[type=number], select {
     color: #333;
     border: none;
     background-color: white;
     width: 100px;
+}
+
+header select {
+    padding: 9px;
 }
 
 header input[type=submit] {

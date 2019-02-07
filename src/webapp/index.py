@@ -80,15 +80,21 @@ def write_memes_batch(meme_list):
 
     return result
 
-def solr_search(query, no_terms, page_no):
+def solr_search(query, no_terms, page_no, time_since):
     if query == "*":
         search_query = "*"
     else:
         search_query = "_text_:" + query
 
+    timerange = ""
+
+    if len(time_since) > 0:
+        timerange = "time:[NOW" + time_since + " TO NOW]"
+
     return solr.search(search_query, **{
         "rows": str(no_terms)
         , "start": str(page_no*no_terms)
+        , "fq": timerange
     }).docs
 
 def setup_collection():

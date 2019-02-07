@@ -10,10 +10,18 @@
                 <div id="search-box" class="center center-text">
                     <form action="/search" method="get">
                         <input type="text" name="s" id="search-box" value="{{ search_term }}">
-                        <input type="number" name="n" id="no-terms-box" min="10" max="1000" value="10">
+                        <input type="number" name="n" id="no-terms-box" min="10" max="1000" value="50">
                         <input type="hidden" name="p" value="0">
+                        <select name="t" selected="{{ time_since }}">
+                            <option value="-1HOUR">1 Hour</option>
+                            <option value="-1DAY">1 Day</option>
+                            <option value="-7DAYS">1 Week</option>
+                            <option value="-1MONTH">1 Month</option>
+                        </select>
                         <input type="submit" value="Search">
                     </form>
+                </div>
+            </div>
     {% else %}
         <header class="full-height">
             <div class="center center-text vertical-center">
@@ -23,13 +31,19 @@
                 <div id="search-box" class="center center-text">
                     <form action="/search" method="get">
                         <input type="text" name="s" id="search-box">
-                        <input type="number" name="n" id="no-terms-box" min="10" max="1000" value="10">
+                        <input type="number" name="n" id="no-terms-box" min="10" max="1000" value="50">
                         <input type="hidden" name="p" value="0">
+                        <select name="t">
+                            <option value="-1HOUR">1 Hour</option>
+                            <option value="-1DAY">1 Day</option>
+                            <option value="-7DAYS">1 Week</option>
+                            <option value="-1MONTH">1 Month</option>
+                        </select>
                         <input type="submit" value="Search">
                     </form>
                 </div>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </header>
     <div id="main">
         <div>
@@ -53,6 +67,7 @@
                         <input type="hidden" name="p" value="{{ page_no - 1 }}">
                         <input type="hidden" name="n" value="{{ no_terms }}">
                         <input type="hidden" name="s" value="{{ search_term }}">
+                        <input type="hidden" name="t" value="{{ time_since }}">
                     </form>
                 {% endif %}
                 {% if results|length > 0 %}
@@ -61,6 +76,7 @@
                         <input type="hidden" name="p" value="{{ page_no + 1 }}">
                         <input type="hidden" name="n" value="{{ no_terms }}">
                         <input type="hidden" name="s" value="{{ search_term }}">
+                        <input type="hidden" name="t" value="{{ time_since }}">
                     </form>
                 {% endif %}
             </div>
