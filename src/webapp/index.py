@@ -95,11 +95,12 @@ def solr_search(query, no_terms, page_no, time_since, nsfw, subreddits):
         for sub in subreddits:
             search_query += " AND sub:'%s'" % sub
 
-    if len(nsfw) == 1 and nsfw[0] == "1":
-        search_query += ' AND over_18:1'
-    elif nsfw[0].lower() == "none":
-        # No safe search
-        pass
+    if len(nsfw) == 1:
+        if nsfw[0] == "1":
+            search_query += ' AND over_18:1'
+        elif nsfw[0] == "none":
+            # No safe search
+            pass
     else:
         search_query += " AND over_18:0"
 
