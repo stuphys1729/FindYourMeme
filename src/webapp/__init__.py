@@ -1,11 +1,9 @@
 from flask import Flask, url_for, request, render_template
 from .index import solr_search, setup_collection, fetch_meme, create_db, sync_solr_with_db
 import threading
-<<<<<<< HEAD
 from collections import defaultdict
-=======
 import string
->>>>>>> fix_webapp_errors
+import copy
 
 
 app = Flask(__name__)
@@ -27,13 +25,10 @@ def search():
     page_no = int(request.args.get('p'))
     time_since = request.args.get('t')
 
-    if len(search_term) == 0:
-        search_term = "*"
+    full_search = copy.copy(search_term)
 
-    subreddits = extract_arg(search_term, "subreddit")
-    nsfw = extract_arg(search_term, "nsfw")
-
-    print(search_term)
+    search_term, subreddits = extract_arg(search_term, "subreddit")
+    search_term, nsfw = extract_arg(search_term, "nsfw")
 
     # Check params in GET request
     no_terms = search_param_check(no_terms)
@@ -44,7 +39,7 @@ def search():
 
     return render_template('index.html' \
         , results=link_results \
-        , search_term=search_term \
+        , search_term=full_search \
         , page_no=page_no \
         , no_terms=no_terms
         , time_since=time_since
@@ -69,13 +64,13 @@ def sync():
 
 def extract_arg(input_string, arg):
     if arg in input_string:
-        return input_string.split(arg + ":", 1)[1].split(" ", 1)[0].split(",")
+        return input_string[len(arg):].split(" ", 1)[1], input_string.split(arg + ":", 1)[1].split(" ", 1)[0].split(",")
     else:
-        return ""
+        return input_string, ""
 
 def search_param_check(number):
-    if number < 1:
-        return 1
+    if number < 0:
+        return 0
     elif number > 10000:
         return 10000
     else:
