@@ -121,5 +121,6 @@ oldmemes.json
 old_dbs/
 
 src/webapp/migration_add_time_to_db.py
+src/webapp/test_search_bar_extract.py
 
 db_migrations/

@@ -80,9 +80,9 @@ def write_memes_batch(meme_list):
 
     return result
 
-def solr_search(query, no_terms, page_no, time_since):
-    if query == "*":
-        search_query = "*"
+def solr_search(query, no_terms, page_no, time_since, nsfw, subreddits):
+    if query == "*" or len(query.strip()) == 0:
+        search_query = "*:*"
     else:
         search_query = "_text_:" + query
 
@@ -91,10 +91,28 @@ def solr_search(query, no_terms, page_no, time_since):
     if len(time_since) > 0:
         timerange = "time:[NOW" + time_since + " TO NOW]"
 
+    if len(subreddits) > 0:
+        for sub in subreddits:
+            search_query += " AND sub:'%s'" % sub
+
+    if len(nsfw) == 1:
+        if nsfw[0] == "1":
+            search_query += ' AND over_18:1'
+        elif nsfw[0] == "none":
+            # No safe search
+            pass
+    else:
+        search_query += " AND over_18:0"
+
+    start = str(page_no*no_terms)
+    sort = "sum(if(gt(abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),div(time,43200)) desc"
+
+    print(search_query)
+
     return solr.search(search_query, **{
         "rows": str(no_terms)
-        , "start": str(page_no*no_terms)
-        , "sort": "sum(if(gt(abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),div(time,43200)) desc"
+        , "start": start
+        , "sort": sort
         , "fq": timerange
     }).docs
 
