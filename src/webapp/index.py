@@ -80,7 +80,7 @@ def write_memes_batch(meme_list):
 
     return result
 
-def solr_search(query, no_terms, page_no, time_since):
+def solr_search(query, no_terms, page_no, time_since, nsfw, subreddits):
     if query == "*":
         search_query = "*"
     else:
@@ -90,6 +90,16 @@ def solr_search(query, no_terms, page_no, time_since):
 
     if len(time_since) > 0:
         timerange = "time:[NOW" + time_since + " TO NOW]"
+
+    if len(subreddits) > 0:
+        for sub in subreddits:
+            search_query + " AND sub:'%s'" % sub
+
+    if len(nsfw) == 1:
+        search_query + " AND over_18:'%s'" % nsfw[0]
+    else:
+        search_query + " AND over_18:'0'"
+
 
     return solr.search(search_query, **{
         "rows": str(no_terms)

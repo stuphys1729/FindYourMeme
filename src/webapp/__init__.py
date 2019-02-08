@@ -26,7 +26,12 @@ def search():
     if len(search_term) == 0:
         search_term = "*"
 
-    link_results = solr_search(search_term, no_terms, page_no, time_since)
+    subreddits = extract_arg(search_term, "subreddit")
+    nsfw = extract_arg(search_term, "nsfw")
+
+    print(search_term)
+
+    link_results = solr_search(search_term, no_terms, page_no, time_since, nsfw, subreddits)
 
     return render_template('index.html' \
         , results=link_results \
@@ -52,3 +57,9 @@ def scrape():
 def sync():
     sync_solr_with_db()
     return("Sync complete")
+
+def extract_arg(input_string, arg):
+    if arg in input_string:
+        return input_string.split(arg + ":", 1)[1].split(" ", 1)[0].split(",")
+    else:
+        return ""
