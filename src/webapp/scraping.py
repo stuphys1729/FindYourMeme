@@ -16,7 +16,7 @@ import os
 if sys.platform == "win32":
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe' #<-Change this for your system
 
-subreddits = ['dankmemes', 'adviceanimals']
+subreddits = ['dankmemes', 'adviceanimals', 'meirl', 'memes', 'prequelmemes', 'wholesomememes', 'dankchristianmemes', 'lotrmemes', 'sequelmemes']
 
 # The credentials below are linked to my (Stewart) reddit account, if you want
 # to do any of your own research please generate your own (guide linked to from
@@ -27,7 +27,7 @@ _user_agent = 'windows:FindYourMeme:0.1'
 r = praw.Reddit(client_id=_clientId, client_secret=_secret, user_agent=_user_agent)
 image_extensions = ('.jpg', '.png', '.gif')
 
-memeLimit = 20
+memeLimit = 500
 model = None
 mlb = None
 modelPath = 'multiAdviceAnimals.h5'
@@ -61,6 +61,13 @@ def update_meme_data(db_check_fn):
             except OSError:
                 print("Had an image read error")
                 skip = True
+
+            try:
+                im = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            except cv2.error:
+                print("Had an image convertion error")
+                skip = True
+
             if skip:
                 continue
 
@@ -80,13 +87,12 @@ def update_meme_data(db_check_fn):
             else:
                 newData[sub.id]["posted_by"] = '[deleted]'
 
-            im = image.convert('L')
-            newData[sub.id]["image_text"] = pytesseract.image_to_string(im).replace('\n', ' ')
+            greyIm = image.convert('L')
+            newData[sub.id]["image_text"] = pytesseract.image_to_string(greyIm).replace('\n', ' ')
 
             newData[sub.id]['time_of_index'] = str(datetime.now())
 
             # pre-process the image for classification
-            im = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
             im = cv2.resize(im, (96, 96))
             im = im.astype("float") / 255.0
             im = img_to_array(im)
