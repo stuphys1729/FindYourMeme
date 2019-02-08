@@ -54,7 +54,7 @@ def update_meme_data(memeData):
                 "plink": sub.permalink,
                 "time" : sub.created_utc,
                 "sub"  : subreddit,
-                "score": sub.score,
+                "rscore": sub.score,
                 "upvote_ratio": sub.upvote_ratio,
                 "over_18": sub.over_18
             }

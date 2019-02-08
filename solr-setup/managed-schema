@@ -123,8 +123,8 @@
     <field name="sub"           type="text_general" required="true" 	indexed="true" stored="true"/>
     <field name="image_text"    type="text_general" required="true" 	indexed="true" stored="true"/>
     <field name="posted_by"     type="text_general" required="true" 	indexed="true" stored="true"/>
-    <field name="score"         type="text_general" required="true" 	indexed="true" stored="true"/>
-    <field name="upvote_ratio"  type="text_general" required="true" 	indexed="true" stored="true"/>
+    <field name="rscore"         type="pint" required="true" 	indexed="true" stored="true"/>
+    <field name="upvote_ratio"  type="pfloat" required="true" 	indexed="true" stored="true"/>
     <field name="over_18"       type="text_general" required="true" 	indexed="true" stored="true"/>
     <field name="time_of_index" type="pdate" required="true" 	indexed="true" stored="true"/>
 	<field name="format" 		type="text_general" required="false" 	indexed="true" stored="true"/>
@@ -1015,5 +1015,6 @@
        <str name="paramkey">param value</str>
      </similarity>
     -->
+    <similarity class="org.apache.lucene.search.similarities.ClassicSimilarity" />
 
 </schema>

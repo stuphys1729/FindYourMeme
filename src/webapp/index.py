@@ -31,7 +31,7 @@ def create_db():
                 , sub TEXT
                 , image_text TEXT
                 , posted_by TEXT
-                , score INTEGER
+                , rscore INTEGER
                 , upvote_ratio REAL
                 , over_18 TEXT
                 , time_of_index TEXT
@@ -61,7 +61,7 @@ def write_meme(meme):
 
         result = c.execute('''
             INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18'], meme['time_of_index'], meme['format']))
+            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['rscore'], meme['upvote_ratio'], meme['over_18'], meme['time_of_index'], meme['format']))
         conn.commit()
 
     return result
@@ -94,6 +94,7 @@ def solr_search(query, no_terms, page_no, time_since):
     return solr.search(search_query, **{
         "rows": str(no_terms)
         , "start": str(page_no*no_terms)
+        , "sort": "sum(if(gt(abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),div(time,43200)) desc"
         , "fq": timerange
     }).docs
 
@@ -114,7 +115,7 @@ def add_memes(source_dict):
         "sub": meme_data['sub'],
         "image_text": " " + meme_data['image_text'],
         "posted_by": meme_data['posted_by'],
-        "score": meme_data['score'],
+        "rscore": meme_data['rscore'],
         "upvote_ratio": meme_data['upvote_ratio'],
         "over_18": meme_data['over_18'],
         "time_of_index": meme_data['time_of_index'],
