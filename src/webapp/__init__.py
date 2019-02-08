@@ -1,7 +1,11 @@
 from flask import Flask, url_for, request, render_template
 from .index import solr_search, setup_collection, fetch_meme, create_db, sync_solr_with_db
 import threading
+<<<<<<< HEAD
 from collections import defaultdict
+=======
+import string
+>>>>>>> fix_webapp_errors
 
 
 app = Flask(__name__)
@@ -30,6 +34,11 @@ def search():
     nsfw = extract_arg(search_term, "nsfw")
 
     print(search_term)
+
+    # Check params in GET request
+    no_terms = search_param_check(no_terms)
+    page_no = search_param_check(page_no)
+    search_term = preprocess(search_term)
 
     link_results = solr_search(search_term, no_terms, page_no, time_since, nsfw, subreddits)
 
@@ -63,3 +72,23 @@ def extract_arg(input_string, arg):
         return input_string.split(arg + ":", 1)[1].split(" ", 1)[0].split(",")
     else:
         return ""
+
+def search_param_check(number):
+    if number < 1:
+        return 1
+    elif number > 10000:
+        return 10000
+    else:
+        return number
+
+def preprocess(search_term):
+    '''
+    Steps:
+        Remove punctuation
+    '''
+    search_term = search_term.translate(str.maketrans('', '', string.punctuation))
+
+    if len(search_term) == 0:
+        search_term = '*'
+
+    return search_term
