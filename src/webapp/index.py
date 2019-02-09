@@ -32,7 +32,7 @@ def create_db():
                 , sub TEXT
                 , image_text TEXT
                 , posted_by TEXT
-                , score INTEGER
+                , rscore INTEGER
                 , upvote_ratio REAL
                 , over_18 TEXT
                 , time_of_index TEXT
@@ -61,8 +61,8 @@ def write_meme(meme):
         c = conn.cursor()
 
         result = c.execute('''
-            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,datetime(?),?,?,?,?,?,?,datetime(?),?)''',
-            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['score'], meme['upvote_ratio'], meme['over_18'], meme['time_of_index'], meme['format']))
+            INSERT OR REPLACE INTO memes VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+            (meme['id'], meme['title'], meme['url'], meme['plink'], meme['time'], meme['sub'], meme['image_text'], meme['posted_by'], meme['rscore'], meme['upvote_ratio'], meme['over_18'], meme['time_of_index'], meme['format']))
         conn.commit()
 
     return result
@@ -112,15 +112,40 @@ def update_memes_batch(meme_list):
     return result
 
 
-def solr_search(query, no_terms, page_no):
-    if query == "*":
-        search_query = "*"
+def solr_search(query, no_terms, page_no, time_since, nsfw, subreddits):
+    if query == "*" or len(query.strip()) == 0:
+        search_query = "*:*"
     else:
         search_query = "_text_:" + query
 
+    timerange = ""
+
+    if len(time_since) > 0:
+        timerange = "time:[NOW" + time_since + " TO NOW]"
+
+    if len(subreddits) > 0:
+        for sub in subreddits:
+            search_query += " AND sub:'%s'" % sub
+
+    if len(nsfw) == 1:
+        if nsfw[0] == "1":
+            search_query += ' AND over_18:1'
+        elif nsfw[0] == "none":
+            # No safe search
+            pass
+    else:
+        search_query += " AND over_18:0"
+
+    start = str(page_no*no_terms)
+    sort = "sum(if(gt(abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),abs(product(rscore,sub(product(2,upvote_ratio),1))) ,1),div(time,43200)) desc"
+
+    print(search_query)
+
     return solr.search(search_query, **{
         "rows": str(no_terms)
-        , "start": str(page_no*no_terms)
+        , "start": start
+        , "sort": sort
+        , "fq": timerange
     }).docs
 
 def setup_collection():
