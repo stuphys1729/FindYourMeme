@@ -90,8 +90,8 @@ def update_meme(meme):
         c = conn.cursor()
 
         result = c.execute('''
-            UPDATE memes SET score=:score, upvote_ratio=:upvote_ratio, time_of_index=datetime(:time_of_index) WHERE id=:id''',
-            {'id': meme['id'], 'score': meme['score'], 'upvote_ratio': meme['upvote_ratio'], 'time_of_index': meme['time_of_index'] })
+            UPDATE memes SET rscore=:rscore, upvote_ratio=:upvote_ratio, time_of_index=datetime(:time_of_index) WHERE id=:id''',
+            {'id': meme['id'], 'rscore': meme['rscore'], 'upvote_ratio': meme['upvote_ratio'], 'time_of_index': meme['time_of_index'] })
         conn.commit()
 
     return result
@@ -105,7 +105,7 @@ def update_memes_batch(meme_list):
         c = conn.cursor()
 
         result = c.executemany('''
-            UPDATE memes SET score=:score, upvote_ratio=:upvote_ratio, time_of_index=datetime(:time_of_index) WHERE id=:id''',
+            UPDATE memes SET rscore=:rscore, upvote_ratio=:upvote_ratio, time_of_index=datetime(:time_of_index) WHERE id=:id''',
             meme_list)
         conn.commit()
 
@@ -150,10 +150,12 @@ def solr_search(query, no_terms, page_no, time_since, nsfw, subreddits):
 
 def setup_collection():
     print("Scraping...")
-    while True:
-        time.sleep(60)
-        newData = update_meme_data(is_id_in_db)
+    # , 'adviceanimals'
+    subreddits = ['dankmemes', 'meirl', 'memes', 'prequelmemes', 'wholesomememes', 'dankchristianmemes', 'lotrmemes', 'sequelmemes']
+    for subreddit in subreddits:
+        newData = update_meme_data(subreddit, is_id_in_db)
         add_memes(newData)
+    print("Finised scraping.")
 
 def add_memes(source_dict):
 
@@ -165,7 +167,7 @@ def add_memes(source_dict):
         if is_id_in_db(meme_id):
             update_list.append({
                 "id": meme_id,
-                "score": meme_data['score'],
+                "rscore": meme_data['rscore'],
                 "upvote_ratio": meme_data['upvote_ratio'],
                 "time_of_index": meme_data['time_of_index']
             })
@@ -179,7 +181,7 @@ def add_memes(source_dict):
                 "sub": meme_data['sub'],
                 "image_text": " " + meme_data['image_text'],
                 "posted_by": meme_data['posted_by'],
-                "score": meme_data['score'],
+                "rscore": meme_data['rscore'],
                 "upvote_ratio": meme_data['upvote_ratio'],
                 "over_18": meme_data['over_18'],
                 "time_of_index": meme_data['time_of_index'],
