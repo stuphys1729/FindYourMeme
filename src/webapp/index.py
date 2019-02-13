@@ -69,6 +69,7 @@ def write_meme(meme):
 
 def write_memes_batch(meme_list):
     result = None
+    print(meme_list[0])
 
     with sqlite3.connect('memes.db') as conn:
         conn.row_factory = dict_factory
@@ -190,7 +191,11 @@ def add_memes(source_dict):
     print("Writing {} new memes to database".format(len(write_list)))
     print("Updating {} existing memes in the database".format(len(update_list)))
 
-    write_tuples = [tuple(d.values()) for d in write_list]
+    #write_tuples = [tuple(d.values()) for d in write_list]
+    write_tuples = [( d['id'], d['title'], d['url'], d['plink'], d['time'],
+                      d['sub'], d['image_text'], d['posted_by'], d['rscore'],
+                      d['upvote_ratio'], d['over_18'], d['time_of_index'], d['format'])
+                      for d in write_list]
     if write_tuples != []:
         write_memes_batch(write_tuples)
     if update_list != []:

@@ -25,7 +25,7 @@ _user_agent = 'windows:FindYourMeme:0.1'
 r = praw.Reddit(client_id=_clientId, client_secret=_secret, user_agent=_user_agent)
 image_extensions = ('.jpg', '.png', '.gif')
 
-memeLimit = 1000
+memeLimit = 100
 model = None
 mlb = None
 modelPath = 'multiAdviceAnimals.h5'
@@ -52,17 +52,20 @@ def update_meme_data(subreddit, db_check_fn):
         if not sub.url.endswith(image_extensions):
             continue
 
+        
+        print("[SCRAPE] Scraping image from post", sub.id, sub.permalink)
+
         skip = False
         try:
             image = Image.open(requests.get(sub.url, stream=True).raw)
         except OSError:
-            print("Had an image read error")
+            print("[SCRAPE] Had an image read error")
             skip = True
 
         try:
             im = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         except cv2.error:
-            print("Had an image convertion error")
+            print("[SCRAPE] Had an image convertion error")
             skip = True
 
         if skip:
@@ -100,7 +103,7 @@ def update_meme_data(subreddit, db_check_fn):
         global model
         global mlb
         if model == None:
-            print("[INFO] loading network...")
+            print("[SCRAPE] loading network...")
             model = load_model(modelPath)
             mlb = pickle.loads(open(labelPath, "rb").read())
 
@@ -110,7 +113,7 @@ def update_meme_data(subreddit, db_check_fn):
 
         if proba[idx] > 0.97:
             newData[sub.id]["format"] = mlb.classes_[idx].replace('-', ' ')
-            print("Assigning class {} to meme {} with probability {}".format(pred, sub.url, proba[idx]))
+            print("[SCRAPE] Assigning class {} to meme {} with probability {}".format(pred, sub.url, proba[idx]))
         else:
             newData[sub.id]['format'] = ''
 
@@ -118,6 +121,6 @@ def update_meme_data(subreddit, db_check_fn):
 
     taken = (datetime.now() - start)
     if updated != 0:
-        print("Processed {} memes from {} in {}".format(updated, subreddit, taken))
+        print("[SCRAPE] Processed {} memes from {} in {}".format(updated, subreddit, taken))
 
     return newData
