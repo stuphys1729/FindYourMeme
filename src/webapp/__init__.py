@@ -8,6 +8,7 @@ import copy
 
 app = Flask(__name__)
 create_db()
+scraping = False
 
 # TODO threading is a bitch at the best of times, we can look into celery if we
 # really want but I suggest that for a project like this we just don't thread
@@ -52,10 +53,13 @@ def meme(meme_id):
 
 @app.route('/scrape')
 def scrape():
-    # TODO scrape from here
-    # setup_collection()
-    threading.Thread(target=setup_collection).start()
-    return "Scraping"
+    global scraping
+    if (scraping):
+        return "Already scraping"
+    else:
+        scraping = True
+        threading.Thread(target=setup_collection).start()
+        return "Scraping"
 
 @app.route('/sync')
 def sync():

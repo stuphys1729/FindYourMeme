@@ -145,18 +145,20 @@ def solr_search(query, no_terms, page_no, time_since, nsfw, subreddits):
     return solr.search(search_query, **{
         "rows": str(no_terms)
         , "start": start
-        , "sort": sort
+#        , "sort": sort
         , "fq": timerange
     }).docs
 
 def setup_collection():
-    print("Scraping...")
-    # , 'adviceanimals'
-    subreddits = ['dankmemes', 'meirl', 'memes', 'prequelmemes', 'wholesomememes', 'dankchristianmemes', 'lotrmemes', 'sequelmemes']
-    for subreddit in subreddits:
-        newData = update_meme_data(subreddit, is_id_in_db)
-        add_memes(newData)
-    print("Finised scraping.")
+    time.sleep(10)
+    while(True):
+        print("Scraping...")
+        subreddits = ['dankmemes', 'adviceanimals', 'meirl', 'memes', 'prequelmemes', 'wholesomememes', 'dankchristianmemes', 'lotrmemes', 'sequelmemes']
+        for subreddit in subreddits:
+            newData = update_meme_data(subreddit, is_id_in_db)
+            add_memes(newData)
+        print("Finised scraping. Waiting 5 minutes before starting again...")
+        time.sleep(300)
 
 def add_memes(source_dict):
 
